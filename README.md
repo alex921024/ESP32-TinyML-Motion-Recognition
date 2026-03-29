@@ -50,17 +50,7 @@
 
 ---
 
-## 📊 成果展示 (Demo)
-
-> **📝 建議：** 您可以在這裡放上一張 Edge Impulse 的 `Feature Explorer` 3D 特徵分布截圖，或是實際在監控視窗印出 99% 準確率的畫面截圖。
-
-![在此替換為你的特徵分布圖](url_to_your_image)
-
----
-
 ## 👤 作者 (Author)
 
 **Alex**
 * GitHub: [@alex921024](https://github.com/alex921024)
-
-歡迎對 IoT 邊緣運算或 TinyML 有興趣的開發者交流討論！如果這個專案對你有幫助，請給我一個 ⭐ Star！
