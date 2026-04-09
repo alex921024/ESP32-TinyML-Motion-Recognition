@@ -113,8 +113,3 @@ python collect_data.py
 **Alex**
 
   * GitHub: [@alex921024](https://www.google.com/search?q=https://github.com/alex921024)
-
-
-
-```
-```
