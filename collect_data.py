@@ -3,11 +3,11 @@ import time
 import csv
 
 # 設定你的 COM Port 
-COM_PORT = 'COM3'
+COM_PORT = 'COM20'
 BAUD_RATE = 115200
 
 # 每次錄製前，修改這裡的動作名稱 
-ACTION_NAME = "triangle" #triangle, circle, idle, star
+ACTION_NAME = "idle" #triangle, circle, idle
 
 print(f"即將錄製動作：【{ACTION_NAME}】")
 print(f"請確認已經關閉 Arduino IDE 的「序列埠繪圖家」或「監控視窗」！")
