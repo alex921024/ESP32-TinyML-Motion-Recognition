@@ -20,7 +20,7 @@
 
 ## 📁 專案資料夾結構
 
-```text
+```
 ESP32-TinyML-Motion-Recognition/
 │
 ├── collect data/                  # 階段一：存放資料收集專用的 Arduino 程式碼 (Data Forwarder)
@@ -62,7 +62,7 @@ ESP32-TinyML-Motion-Recognition/
 
 開啟終端機 (Terminal / PowerShell)，執行專案中的 Python 腳本：
 
-```bash
+```
 python collect_data.py
 ```
 
