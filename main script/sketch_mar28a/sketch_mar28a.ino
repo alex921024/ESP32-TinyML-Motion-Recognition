@@ -5,12 +5,11 @@
 
 const int MPU_ADDR = 0x68;
 
-// --- 設定 ESP32 專屬 Wi-Fi 熱點名稱與密碼 ---
 const char* ssid = "ESP32_AI_Motion"; 
-const char* password = " "; 
+const char* password = "password123"; 
 
 WebServer server(80);
-String currentAction = "idle"; // 儲存目前判定到的動作
+String currentAction = "idle"; 
 
 float features[EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE];
 size_t feature_ix = 0;
@@ -74,7 +73,8 @@ const char html_page[] PROGMEM = R"rawliteral(
   <script>
     // 每 0.3 秒向 ESP32 詢問一次目前的動作
     setInterval(() => {
-      fetch('/data')
+      // ★ 防快取解法 1：加上時間戳記，確保每次網址都不同，強迫瀏覽器抓新資料
+      fetch('/data?t=' + new Date().getTime())
         .then(response => response.json())
         .then(data => {
           const action = data.action;
@@ -84,10 +84,10 @@ const char html_page[] PROGMEM = R"rawliteral(
           // 重置動畫 class
           handEl.className = 'hand'; 
 
-          if (action === 'circle') {
+          if (action === 'circle_data') {
             textEl.innerText = "⭕ 正在：畫圈 (Circle)";
             handEl.classList.add('anim-circle');
-          } else if (action === 'triangle') {
+          } else if (action === 'triangle_data') {
             textEl.innerText = "🔺 正在：畫三角形 (Triangle)";
             handEl.classList.add('anim-triangle');
           } else {
@@ -113,7 +113,6 @@ void setup() {
   Wire.write(0);     
   Wire.endTransmission(true);
 
-  // --- 改為建立 Wi-Fi 熱點 (AP 模式) ---
   Serial.println("\n正在啟動 ESP32 專屬 Wi-Fi 熱點...");
   WiFi.softAP(ssid, password);
   IPAddress myIP = WiFi.softAPIP();
@@ -132,8 +131,11 @@ void setup() {
   server.on("/", []() {
     server.send(200, "text/html", html_page);
   });
+  
   server.on("/data", []() {
     String json = "{\"action\":\"" + currentAction + "\"}";
+    // ★ 防快取解法 2：從伺服器端強制命令手機不准快取
+    server.sendHeader("Cache-Control", "no-cache, no-store, must-revalidate"); 
     server.send(200, "application/json", json);
   });
   
@@ -182,14 +184,12 @@ void loop() {
 
         if (res == EI_IMPULSE_OK) {
           
-          // ★★★ 在監控視窗印出即時百分比 ★★★
           Serial.println("\n=== AI 預測結果 ===");
           
           float highest_prob = 0.0;
           String best_label = "idle"; 
 
           for (uint16_t i = 0; i < EI_CLASSIFIER_LABEL_COUNT; i++) {
-            // 印出動作名稱與機率 (乘以 100 轉為百分比)
             Serial.print("  ");
             Serial.print(result.classification[i].label);
             Serial.print(": ");
@@ -203,13 +203,10 @@ void loop() {
           }
           Serial.println("==================");
           
-          // 如果最高機率大於 60%，才更新給網頁前端的變數
           if (highest_prob > 0.6) {
              currentAction = best_label;
           }
         }
-        
-        // 推論完畢，歸零陣列索引，重新開始錄製下一個動作
         feature_ix = 0;
       }
     }
