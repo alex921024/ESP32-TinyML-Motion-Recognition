@@ -32,6 +32,7 @@ ESP32-TinyML-Motion-Recognition/
 ├── .gitattributes                 # Git 屬性設定檔
 ├── LICENSE                        # 專案開源授權條款
 └── README.md                      # 專案說明文件
+```
 ## 🛠️ 硬體接線 (Hardware Wiring)
 
 採用 I2C 通訊協定連接 ESP32 與 MPU-6500：
